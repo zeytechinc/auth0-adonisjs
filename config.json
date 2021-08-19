@@ -1,0 +1,7 @@
+{
+  "core": false,
+  "license": "Unlicense",
+  "services": [],
+  "minNodeVersion": "14.17.0",
+  "probotApps": []
+}
