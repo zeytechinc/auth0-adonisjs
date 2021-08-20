@@ -1,0 +1,41 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+const axios = require('axios').default
+
+export default class LoadUserProfile {
+
+  private endpointRegex = /\/userinfo$/
+
+  public async handle(ctx: HttpContextContract, next: () => Promise<void>) {
+
+    ctx.logger.info('decoded is %O', ctx.request.auth)
+    if (!ctx.request.auth.aud) {
+      return ctx.response.badRequest('token information incomplete')
+    }
+    const endpoint = ctx.request.auth.aud.find(url => this.endpointRegex.test(url))
+    if (!endpoint) {
+      return ctx.response.badRequest('token missing data')
+    }
+
+    // go get the profile and stuff it on the request.
+    let profileData = UserProfileCache.get(ctx.request.userId!)
+    if (profileData) {
+      ctx.request.userProfile = profileData
+    } else {
+      try {
+        ctx.logger.info('retrieving user profile from auth0')
+        const response = await axios.get(endpoint, {
+          headers: {
+            authorization: `Bearer ${ctx.request.token}`,
+          },
+        })
+        ctx.request.userProfile = response.data
+        UserProfileCache.set(ctx.request.userId!, ctx.request.userProfile)
+      } catch (err) {
+        ctx.logger.error(err, 'error retrieving user profile')
+        return ctx.response.internalServerError('error retrieving user profile')
+      }
+    }
+
+    await next()
+  }
+}

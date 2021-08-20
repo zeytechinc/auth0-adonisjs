@@ -1,0 +1,30 @@
+import { Auth0AdonisConfig } from '@ioc:Adonis/Addons/Zeytech/Auth0'
+import Env from '@ioc:Adonis/Core/Env'
+
+const config: Auth0AdonisConfig = {
+  /* ---------------------
+   * Configuration for the auth0 management client
+   * ---------------------
+   */
+  auth0Config: {
+    clientId: Env.get('AUTH0_CLIENT_ID'),
+    clientSecret: Env.get('AUTH0_CLIENT_SECRET'),
+    domain: Env.get('AUTH0_DOMAIN'),
+    audience: Env.get('AUTH0_AUDIENCE', ''),
+    scope: Env.get('AUTH0_SCOPE', ''),
+  },
+
+  /* ---------------------
+   * JWT cert for verifying auth0 tokens
+   * ---------------------
+   */
+  // jwtCert: Env.get('AUTH_CERT'),
+
+  /* ---------------------
+   * Key for extracting roles list from decoded token data
+   * ---------------------
+   */
+  // tokenRolesKey: '',
+}
+
+export default config
