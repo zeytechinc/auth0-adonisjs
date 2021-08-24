@@ -10,5 +10,4 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0' {
   }
 
   const AuthenticateMiddleware: AuthenticateMiddlewareContract
-  export default AuthenticateMiddleware
 }

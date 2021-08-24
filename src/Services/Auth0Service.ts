@@ -1,4 +1,4 @@
-import { ManagementClient, Role, User } from 'auth0'
+import { ManagementClient, ObjectWithId, Role, UpdateUserData, User } from 'auth0'
 import { ConfigContract } from '@ioc:Adonis/Core/Config'
 import { LoggerContract } from '@ioc:Adonis/Core/Logger'
 import { promisify } from 'util'
@@ -56,19 +56,52 @@ export default class Auth0Service {
 
   // TODO: When implementing these functions, update the return typescript signature appropriately.
 
-  // public async grantRole(auth0RoleId: string, auth0UserId: string) {
-  //   // TODO: Implement when needed (when we create UI to manage roles).
-  // }
+  public async grantRole(auth0RoleId: string, auth0UserId: string) {
+    this.mgmtClient.assignRolestoUser(
+      { id: auth0UserId },
+      { roles: [auth0RoleId] },
+      function (err) {
+        if (err) {
+          this.logger.error('Error granting role: %o', JSON.stringify(err))
+        }
+      }
+    )
+  }
 
-  // public async revokeRole(auth0RoleId: string, auth0UserId: string) {
-  //   // TODO: Implement when needed (when we create UI to manage roles).
-  // }
+  public async revokeRole(auth0RoleId: string, auth0UserId: string) {
+    this.mgmtClient.removeRolesFromUser(
+      { id: auth0UserId },
+      { roles: [auth0RoleId] },
+      function (err) {
+        if (err) {
+          this.logger.error('Error revoking role: %o', JSON.stringify(err))
+        }
+      }
+    )
+  }
 
-  // public async changeEmail(id: string, newEmail: string, requestVerification = false) {
-  //   // tasks: update email via updateUserProfile.  if request verification is true, send verification request.
-  // }
+  public async changeEmail(auth0UserId: string, newEmail: string, requestVerification = false) {
+    //TODO: should figure out a way to verify new email BEFORE changing the data (ensures correct new email address)
+    await this.updateUserProfile(auth0UserId, { email: newEmail })
+    if (requestVerification) {
+      this.mgmtClient.sendEmailVerification({ user_id: auth0UserId }, function (err, data) {
+        if (err) {
+          this.logger.error('Error sending verification email: %o', JSON.stringify(err))
+        } else {
+          this.logger.log('Verification email sent: %o', JSON.stringify(data))
+        }
+      })
+    }
+  }
 
-  // public async updateUserProfile(id: string, userProfile: Partial<SomeUserProfileContractOrJustAnObjectToStickInUserMetaData?>) {
-  //   this.mgmtClient.updateUser({ id }, {...})
-  // }
+  public async updateUserProfile(auth0UserId: string, userProfile: Partial<UpdateUserData>) {
+    const idObj: ObjectWithId = { id: auth0UserId }
+    this.mgmtClient.updateUser(idObj, userProfile, function (err, user) {
+      if (err) {
+        this.logger.error('Error updating user: %o', JSON.stringify(err))
+      } else {
+        this.logger.log('User Updated: %o', JSON.stringify(user))
+      }
+    })
+  }
 }

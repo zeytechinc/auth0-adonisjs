@@ -1,7 +1,7 @@
 declare module '@ioc:Adonis/Addons/Zeytech/Auth0' {
   import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
   import { RequestContract } from '@ioc:Adonis/Core/Request'
-  import { Role, User } from 'auth0'
+  import { Role, User, UpdateUserData } from 'auth0'
   import { JwtPayload } from 'jsonwebtoken'
 
   export interface AuthenticationHelperContract {
@@ -42,9 +42,16 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0' {
     tokenRolesKey?: string
   }
 
-  export interface Auth0Service {
+  export interface Auth0ServiceContract {
     getUser(id: string): Promise<User>
     getRoles(): Promise<Role[]>
     verifyToken(bearerToken: string): Promise<JwtPayload>
+    grantRole(auth0RoleId: string, auth0UserId: string)
+    revokeRole(auth0RoleId: string, auth0UserId: string)
+    changeEmail(auth0UserId: string, newEmail: string, requestVerification: Boolean)
+    updateUserProfile(auth0UserId: string, userProfile: Partial<UpdateUserData>)
   }
+
+  const Auth0Service: Auth0ServiceContract
+  export default Auth0Service
 }
