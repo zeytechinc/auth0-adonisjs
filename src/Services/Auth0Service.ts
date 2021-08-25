@@ -28,16 +28,6 @@ export default class Auth0Service {
     }
   }
 
-  public async getUser(id: string): Promise<User> {
-    // TODO: Add caching to avoid being rate limited
-    return await this.mgmtClient.getUser({ id })
-  }
-
-  public async getRoles(): Promise<Role[]> {
-    // TODO: Add caching to avoid being rate limited
-    return await this.mgmtClient.getRoles()
-  }
-
   public async verifyToken(bearerToken: string): Promise<jwt.JwtPayload> {
     try {
       this.lazyLoadDeps()
@@ -54,25 +44,47 @@ export default class Auth0Service {
     }
   }
 
-  // TODO: When implementing these functions, update the return typescript signature appropriately.
+  // Users
+  public async getAllUsers(): Promise<User[]> {
+    return await this.mgmtClient.getUsers()
+  }
 
-  public async grantRole(auth0RoleId: string, auth0UserId: string) {
+  public async getUser(id: string): Promise<User> {
+    return await this.mgmtClient.getUser({ id })
+  }
+
+  public async updateUser(auth0UserId: string, userData: Partial<UpdateUserData>): Promise<User> {
+    return await this.mgmtClient.updateUser({ id: auth0UserId }, userData)
+  }
+
+  public async getAllUserRoles(auth0UserId: string): Promise<Role[]> {
+    return await this.mgmtClient.getUserRoles({ id: auth0UserId })
+  }
+
+  public async addUserRole(auth0RoleId: string, auth0UserId: string): Promise<Boolean> {
     await this.mgmtClient.assignRolestoUser({ id: auth0UserId }, { roles: [auth0RoleId] })
     return true
   }
 
-  public async revokeRole(auth0RoleId: string, auth0UserId: string) {
+  public async removeUserRole(auth0RoleId: string, auth0UserId: string): Promise<Boolean> {
     await this.mgmtClient.removeRolesFromUser({ id: auth0UserId }, { roles: [auth0RoleId] })
     return true
   }
 
-  public async changeEmail(auth0UserId: string, newEmail: string) {
-    await this.updateUserProfile(auth0UserId, { email: newEmail })
-    return true
+  public async updateUserEmail(auth0UserId: string, newEmail: string): Promise<User> {
+    return await this.updateUser(auth0UserId, { email: newEmail })
   }
 
-  public async updateUserProfile(auth0UserId: string, userProfile: Partial<UpdateUserData>) {
-    await this.mgmtClient.updateUser({ id: auth0UserId }, userProfile)
-    return true
+  // Roles
+  public async getAllRoles(): Promise<Role[]> {
+    return await this.mgmtClient.getRoles()
+  }
+
+  public async getRole(auth0RoleId: string): Promise<Role> {
+    return await this.mgmtClient.getRole({ id: auth0RoleId })
+  }
+
+  public async getRoleUsers(auth0RoleId: string): Promise<User[]> {
+    return await this.mgmtClient.getUsersInRole({ id: auth0RoleId })
   }
 }

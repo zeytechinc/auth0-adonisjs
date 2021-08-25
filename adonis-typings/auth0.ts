@@ -43,13 +43,17 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
   }
 
   export interface Auth0ServiceContract {
-    getUser(id: string): Promise<User>
-    getRoles(): Promise<Role[]>
     verifyToken(bearerToken: string): Promise<JwtPayload>
-    grantRole(auth0RoleId: string, auth0UserId: string)
-    revokeRole(auth0RoleId: string, auth0UserId: string)
-    changeEmail(auth0UserId: string, newEmail: string)
-    updateUserProfile(auth0UserId: string, userProfile: Partial<UpdateUserData>)
+    getAllUsers(): Promise<User[]>
+    getUser(id: string): Promise<User>
+    updateUser(auth0UserId: string, userData: Partial<UpdateUserData>): Promise<User>
+    getAllUserRoles(auth0UserId: string): Promise<Role[]>
+    addUserRole(auth0RoleId: string, auth0UserId: string): Promise<Boolean>
+    removeUserRole(auth0RoleId: string, auth0UserId: string): Promise<Boolean>
+    updateUserEmail(auth0UserId: string, newEmail: string): Promise<User>
+    getAllRoles(): Promise<Role[]>
+    getRole(auth0RoleId: string): Promise<Role>
+    getRoleUsers(auth0RoleId: string): Promise<User[]>
   }
 
   const Auth0Service: Auth0ServiceContract
