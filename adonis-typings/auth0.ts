@@ -48,7 +48,7 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
     verifyToken(bearerToken: string): Promise<JwtPayload>
     grantRole(auth0RoleId: string, auth0UserId: string)
     revokeRole(auth0RoleId: string, auth0UserId: string)
-    changeEmail(auth0UserId: string, newEmail: string, requestVerification: Boolean)
+    changeEmail(auth0UserId: string, newEmail: string)
     updateUserProfile(auth0UserId: string, userProfile: Partial<UpdateUserData>)
   }
 
