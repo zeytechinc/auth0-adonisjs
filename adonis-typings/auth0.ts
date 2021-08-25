@@ -1,4 +1,4 @@
-declare module '@ioc:Adonis/Addons/Zeytech/Auth0' {
+declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
   import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
   import { RequestContract } from '@ioc:Adonis/Core/Request'
   import { Role, User, UpdateUserData } from 'auth0'

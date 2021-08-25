@@ -1,7 +1,7 @@
 /// <reference path="../../adonis-typings/middleware.ts" />
 
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { AuthenticationHelperContract } from '@ioc:Adonis/Addons/Zeytech/Auth0'
+import { AuthenticationHelperContract } from '@ioc:Adonis/Addons/Zeytech/Auth0Service'
 
 export class AuthenticateMiddleware {
   constructor(private authHelper: AuthenticationHelperContract) {}

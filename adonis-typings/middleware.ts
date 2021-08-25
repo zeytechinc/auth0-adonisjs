@@ -1,4 +1,4 @@
-declare module '@ioc:Adonis/Addons/Zeytech/Auth0' {
+declare module '@ioc:Adonis/Addons/Zeytech/AuthenticateMiddleware' {
   import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
   /**
    * Shape of the authenticate middleware class constructor
@@ -10,4 +10,5 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0' {
   }
 
   const AuthenticateMiddleware: AuthenticateMiddlewareContract
+  export default AuthenticateMiddleware
 }

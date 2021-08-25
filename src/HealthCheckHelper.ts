@@ -1,5 +1,5 @@
 import { DateTime, Duration } from 'luxon'
-import { CacheLastAccessInfo } from '@ioc:Adonis/Addons/Zeytech/Auth0'
+import { CacheLastAccessInfo } from '@ioc:Adonis/Addons/Zeytech/Auth0Service'
 
 export default class HealthCheckHelper {
   private static format = 'yyyy-LL-dd HH:mm:ss ZZZZ'

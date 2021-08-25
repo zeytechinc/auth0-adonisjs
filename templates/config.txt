@@ -1,4 +1,4 @@
-import { Auth0AdonisConfig } from '@ioc:Adonis/Addons/Zeytech/Auth0'
+import { Auth0AdonisConfig } from '@ioc:Adonis/Addons/Zeytech/Auth0Service'
 import Env from '@ioc:Adonis/Core/Env'
 
 const config: Auth0AdonisConfig = {

@@ -14,13 +14,13 @@ export default class Auth0Provider {
   public static needsApplication = true
 
   public register() {
-    this.app.container.singleton('Adonis/Addons/Zeytech/Auth0/Auth0Service', () => {
+    this.app.container.singleton('Adonis/Addons/Zeytech/Auth0Service', () => {
       const config = this.app.container.resolveBinding('Adonis/Core/Config')
       const logger = this.app.container.resolveBinding('Adonis/Core/Logger')
       return new Auth0Service(config, logger)
     })
 
-    this.app.container.singleton('Adonis/Addons/Zeytech/Auth0/AuthenticateMiddleware', () => {
+    this.app.container.singleton('Adonis/Addons/Zeytech/AuthenticateMiddleware', () => {
       const config = this.app.container.resolveBinding('Adonis/Core/Config')
       const authService = this.app.container.resolveBinding(
         'Adonis/Addons/Zeytech/Auth0/Auth0Service'

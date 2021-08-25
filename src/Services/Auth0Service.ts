@@ -3,7 +3,7 @@ import { ConfigContract } from '@ioc:Adonis/Core/Config'
 import { LoggerContract } from '@ioc:Adonis/Core/Logger'
 import { promisify } from 'util'
 import * as jwt from 'jsonwebtoken'
-import { Auth0ClientConfig } from '@ioc:Adonis/Addons/Zeytech/Auth0'
+import { Auth0ClientConfig } from '@ioc:Adonis/Addons/Zeytech/Auth0Service'
 import { Exception } from '@adonisjs/core/build/standalone'
 
 const jwtVerify = promisify<

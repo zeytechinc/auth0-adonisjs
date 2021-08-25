@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ConfigContract } from '@ioc:Adonis/Core/Config'
 import { RequestContract } from '@ioc:Adonis/Core/Request'
-import { AuthenticationHelperContract } from '@ioc:Adonis/Addons/Zeytech/Auth0'
+import { AuthenticationHelperContract } from '@ioc:Adonis/Addons/Zeytech/Auth0Service'
 import Auth0Service from './Services/Auth0Service'
 import { Exception } from '@adonisjs/core/build/standalone'
 
