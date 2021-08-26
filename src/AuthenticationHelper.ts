@@ -32,6 +32,31 @@ export class AuthenticationHelper implements AuthenticationHelperContract {
         ctx.request.auth = decodedToken
         ctx.request.userId = decodedToken.sub
         ctx.request.audience = decodedToken.aud
+
+        if (this.config.get('auth')) {
+          const authConfig = this.config.get('auth')
+          const UserModel = (await authConfig.guards[authConfig.guard].provider.model()).default
+          console.log('UserModel is ', UserModel)
+          // @ts-ignore
+          const auth0User = await ctx.ally.use('auth0').userFromToken(bearerToken)
+          ctx.request.email = auth0User.email
+          if (UserModel) {
+            const user = await UserModel.firstOrCreate(
+              {
+                email: auth0User.email || undefined,
+              },
+              {
+                password: '',
+                rememberMeToken: bearerToken,
+              }
+            )
+            // @ts-ignore
+            await ctx.auth.use('web').login(user)
+          } else {
+            console.log('no user model')
+          }
+        }
+
         const rolesKey = this.config.get('zeytech-auth0.tokenRolesKey')
         if (rolesKey) {
           ctx.request.roles = decodedToken[rolesKey]

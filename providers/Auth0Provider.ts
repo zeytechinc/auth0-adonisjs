@@ -22,9 +22,7 @@ export default class Auth0Provider {
 
     this.app.container.singleton('Adonis/Addons/Zeytech/AuthenticateMiddleware', () => {
       const config = this.app.container.resolveBinding('Adonis/Core/Config')
-      const authService = this.app.container.resolveBinding(
-        'Adonis/Addons/Zeytech/Auth0/Auth0Service'
-      )
+      const authService = this.app.container.resolveBinding('Adonis/Addons/Zeytech/Auth0Service')
       const authHelper = new AuthenticationHelper(config, authService)
       return new AuthenticateMiddleware(authHelper)
     })

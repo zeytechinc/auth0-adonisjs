@@ -3,6 +3,7 @@ declare module '@ioc:Adonis/Core/Request' {
     auth?: any
     roles?: Array<string>
     userId?: string
+    email?: string
     token?: string
     audience?: string | string[]
   }
