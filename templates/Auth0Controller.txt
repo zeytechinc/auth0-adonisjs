@@ -1,0 +1,109 @@
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Auth0Service from '@ioc:Adonis/Addons/Zeytech/Auth0Service'
+import { Exception } from '@adonisjs/core/build/standalone'
+
+export default class Auth0Controller {
+  // Users
+  public async getAllUsers({ logger }: HttpContextContract) {
+    try {
+      return await Auth0Service.getAllUsers()
+    } catch (err) {
+      logger.error(err)
+      throw new Exception('Unable to retrieve users', 500, 'E_A0_SVC')
+    }
+  }
+
+  public async getUser({ request, logger }: HttpContextContract) {
+    const params = request.params()
+    try {
+      return await Auth0Service.getUser(params['id'])
+    } catch (err) {
+      logger.error(err)
+      throw new Exception('Unable to retrieve user', 500, 'E_A0_SVC')
+    }
+  }
+
+  public async updateUser({ request, logger }: HttpContextContract) {
+    const body = request.body()
+    const params = request.params()
+    try {
+      return await Auth0Service.updateUser(params['id'], body)
+    } catch (err) {
+      logger.error(err)
+      throw new Exception('Unable to update user', 500, 'E_A0_SVC')
+    }
+  }
+
+  public async getAllUserRoles({ request, logger }: HttpContextContract) {
+    const params = request.params()
+    try {
+      return await Auth0Service.getAllUserRoles(params['id'])
+    } catch (err) {
+      logger.error(err)
+      throw new Exception('Unable to retrieve user roles', 500, 'E_A0_SVC')
+    }
+  }
+
+  public async addUserRole({ request, logger }: HttpContextContract) {
+    const body = request.body()
+    const params = request.params()
+    try {
+      return await Auth0Service.addUserRole(body['role_id'], params['id'])
+    } catch (err) {
+      logger.error(err)
+      throw new Exception('Unable to add role to user', 500, 'E_A0_SVC')
+    }
+  }
+
+  public async removeUserRole({ request, logger }: HttpContextContract) {
+    const body = request.body()
+    const params = request.params()
+    try {
+      return await Auth0Service.removeUserRole(body['role_id'], params['id'])
+    } catch (err) {
+      logger.error(err)
+      throw new Exception('Unable to remove role from user', 500, 'E_A0_SVC')
+    }
+  }
+
+  public async updateUserEmail({ request, logger }: HttpContextContract) {
+    const body = request.body()
+    const params = request.params()
+    try {
+      return await Auth0Service.updateUserEmail(params['id'], body['new_email'])
+    } catch (err) {
+      logger.error(err)
+      throw new Exception('Unable to update user email', 500, 'E_A0_SVC')
+    }
+  }
+
+  // Roles
+  public async getAllRoles({ logger }: HttpContextContract) {
+    try {
+      return await Auth0Service.getAllRoles()
+    } catch (err) {
+      logger.error(err)
+      throw new Exception('Unable to retrieve roles', 500, 'E_A0_SVC')
+    }
+  }
+
+  public async getRole({ request, logger }: HttpContextContract) {
+    const params = request.params()
+    try {
+      return await Auth0Service.getRole(params['id'])
+    } catch (err) {
+      logger.error(err)
+      throw new Exception('Unable to retrieve role', 500, 'E_A0_SVC')
+    }
+  }
+
+  public async getRoleUsers({ request, logger }: HttpContextContract) {
+    const params = request.params()
+    try {
+      return await Auth0Service.getRole(params['id'])
+    } catch (err) {
+      logger.error(err)
+      throw new Exception('Unable to retrieve users in role', 500, 'E_A0_SVC')
+    }
+  }
+}
