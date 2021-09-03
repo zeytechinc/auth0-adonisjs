@@ -1,6 +1,6 @@
 {
   "name": "@zeytech/adonis-auth0",
-  "version": "1.0.30",
+  "version": "1.1.0",
   "description": "Zeytech AdonisJS plugin to help integrate Auth0 for authentication",
   "main": "build/providers/Auth0Provider.js",
   "types": "build/adonis-typings/index.d.ts",
@@ -20,7 +20,7 @@
     "version": "npm run build",
     "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json zeytechinc/zeytech-adonis-auth0",
     "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build",
-    "co:login": "aws codeartifact login --tool npm --repository zeytech-internal --domain zeytech --domain-owner 353361721131 --profile zeytech-dev --region us-east-1",
+    "co:login": "aws codeartifact login --tool npm --repository zeytech-internal --domain zeytech --domain-owner 353361721131 --profile zeytech-dev --region us-east-1 --namespace @zeytech",
     "prepare": "npm run co:login"
   },
   "author": "Zeytech Inc.",
@@ -69,12 +69,14 @@
     "anyBranch": false
   },
   "dependencies": {
+    "@skrenek/cache-adonisjs": "^1.0.0",
     "auth0": "^2.36.1",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^2.0.4"
   },
   "adonisjs": {
     "instructionsMd": "./build/instructions.md",
-    "types": "zeytech-adonis-auth0",
+    "types": "@zeytech/adonis-auth0",
     "providers": [
       "zeytech-adonis-auth0"
     ],

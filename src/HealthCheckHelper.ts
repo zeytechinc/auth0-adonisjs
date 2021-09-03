@@ -24,8 +24,8 @@ export default class HealthCheckHelper {
     return {
       utc: date.toUTC().toFormat(this.format),
       localTz: date.setZone(tzName || 'America/Chicago').toFormat(this.format),
-      age: age.as('millisecond'),
-      ageDesc: `${age.as('millisecond')} ms (${age.as('minute').toFixed(2)} min)`,
+      age: age.as('milliseconds'),
+      ageDesc: `${age.as('milliseconds')} ms (${age.as('minutes').toFixed(2)} min)`,
     }
   }
 }

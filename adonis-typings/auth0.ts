@@ -29,6 +29,25 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
     scope: string
   }
 
+  export interface Auth0CacheHealthCheckConfig {
+    enabled: boolean
+    includeItems?: boolean
+    dateFormat?: string
+  }
+
+  export interface Auth0CacheInstanceConfig {
+    maxSize: number
+    maxAge?: number
+    connectionName?: string
+    engine: 'memory' | 'redis'
+    healthCheck: boolean | Auth0CacheHealthCheckConfig
+  }
+
+  export interface Auth0CacheConfig {
+    users: Auth0CacheInstanceConfig
+    roles: Auth0CacheInstanceConfig
+  }
+
   export interface CacheLastAccessInfo {
     utc: string
     localTz: string
@@ -40,6 +59,19 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
     auth0Config: Auth0ClientConfig
     jwtCert?: string
     tokenRolesKey?: string
+    cache: Auth0CacheConfig
+
+    /* engine: 'memory', // Valid values: 'memory' | 'redis'
+    users: {
+      maxSize: 50,
+      maxAage: 900, // in seconds
+      connectionName: 'cache', // Used only if engine is 'redis'
+    },
+    roles: {
+      maxSize: 0,
+      maxAge: 3600, // in seconds
+      connectionName: 'cache', // Used only if engine is 'redis'
+    }, */
   }
 
   export interface Auth0ServiceContract {
@@ -54,6 +86,8 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
     getAllRoles(): Promise<Role[]>
     getRole(auth0RoleId: string): Promise<Role>
     getRoleUsers(auth0RoleId: string): Promise<User[]>
+    clearUserCache(): Promise<void>
+    clearRoleCache(): Promise<void>
   }
 
   const Auth0Service: Auth0ServiceContract

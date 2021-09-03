@@ -25,6 +25,34 @@ const config: Auth0AdonisConfig = {
    * ---------------------
    */
   // tokenRolesKey: '',
+
+  /* ---------------------
+   * Cache configuration to use for users and roles to avoid rate limiting from Auth0.
+   * NOTE: memory engine should not be used in a production environment that uses
+   *       multiple servers or a single server that uses node clustering.
+   *       If 'redis' engine is chosen, utilizes Adonis' built in support for Redis.
+   * ---------------------
+   */
+  cache: {
+    users: {
+      maxSize: 50,
+      maxAge: 900, // in seconds
+      connectionName: 'cache', // Used only if engine is 'redis'
+      engine: 'memory', // Valid values: 'memory' | 'redis'
+      healthCheck: {
+        enabled: true,
+        includeItems: true,
+        dateFormat: 'yyyy-LL-dd HH:mm:ss ZZZZ',
+      }
+    },
+    roles: {
+      maxSize: 0,
+      maxAge: 3600, // in seconds
+      connectionName: 'cache', // Used only if engine is 'redis'
+      engine: 'memory', // Valid values: 'memory' | 'redis',
+      healthCheck: true, // simple value of true uses defaults for includeItems (false) and dateFormat (yyyy-LL-dd HH:mm:ss ZZZZ).
+    }
+  }
 }
 
 export default config

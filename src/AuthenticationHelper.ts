@@ -33,12 +33,10 @@ export class AuthenticationHelper implements AuthenticationHelperContract {
         ctx.request.userId = decodedToken.sub
         ctx.request.audience = decodedToken.aud
 
-        if (this.config.get('auth')) {
+        if (this.config.get('auth') && decodedToken.sub) {
           const authConfig = this.config.get('auth')
           const UserModel = (await authConfig.guards[authConfig.guard].provider.model()).default
-          console.log('UserModel is ', UserModel)
-          // @ts-ignore
-          const auth0User = await ctx.ally.use('auth0').userFromToken(bearerToken)
+          const auth0User = await this.authService.getUser(decodedToken.sub)
           ctx.request.email = auth0User.email
           if (UserModel) {
             const user = await UserModel.firstOrCreate(
@@ -51,9 +49,9 @@ export class AuthenticationHelper implements AuthenticationHelperContract {
               }
             )
             // @ts-ignore
-            await ctx.auth.use('web').login(user)
+            await ctx.auth.use('web').login(Object.assign({ id: user.id }, auth0User))
           } else {
-            console.log('no user model')
+            console.log('no user model in app or id on token')
           }
         }
 
