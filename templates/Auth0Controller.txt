@@ -14,9 +14,9 @@ export default class Auth0Controller {
   }
 
   public async getUser({ request, logger }: HttpContextContract) {
-    const params = request.params()
+    const { id } = request.params()
     try {
-      return await Auth0Service.getUser(params['id'])
+      return await Auth0Service.getUser(id)
     } catch (err) {
       logger.error(err)
       throw new Exception('Unable to retrieve user', 500, 'E_A0_SVC')
@@ -25,9 +25,9 @@ export default class Auth0Controller {
 
   public async updateUser({ request, logger }: HttpContextContract) {
     const body = request.body()
-    const params = request.params()
+    const { id } = request.params()
     try {
-      return await Auth0Service.updateUser(params['id'], body)
+      return await Auth0Service.updateUser(id, body)
     } catch (err) {
       logger.error(err)
       throw new Exception('Unable to update user', 500, 'E_A0_SVC')
@@ -35,9 +35,9 @@ export default class Auth0Controller {
   }
 
   public async getAllUserRoles({ request, logger }: HttpContextContract) {
-    const params = request.params()
+    const { id } = request.params()
     try {
-      return await Auth0Service.getAllUserRoles(params['id'])
+      return await Auth0Service.getAllUserRoles(id)
     } catch (err) {
       logger.error(err)
       throw new Exception('Unable to retrieve user roles', 500, 'E_A0_SVC')
@@ -45,10 +45,10 @@ export default class Auth0Controller {
   }
 
   public async addUserRole({ request, logger }: HttpContextContract) {
-    const body = request.body()
-    const params = request.params()
+    const { role_id: roleId } = request.body()
+    const { id } = request.params()
     try {
-      return await Auth0Service.addUserRole(body['role_id'], params['id'])
+      return await Auth0Service.addUserRole(roleId, id)
     } catch (err) {
       logger.error(err)
       throw new Exception('Unable to add role to user', 500, 'E_A0_SVC')
@@ -56,10 +56,10 @@ export default class Auth0Controller {
   }
 
   public async removeUserRole({ request, logger }: HttpContextContract) {
-    const body = request.body()
-    const params = request.params()
+    const { role_id: roleId } = request.body()
+    const { id } = params
     try {
-      return await Auth0Service.removeUserRole(body['role_id'], params['id'])
+      return await Auth0Service.removeUserRole(roleId, id)
     } catch (err) {
       logger.error(err)
       throw new Exception('Unable to remove role from user', 500, 'E_A0_SVC')
@@ -67,10 +67,10 @@ export default class Auth0Controller {
   }
 
   public async updateUserEmail({ request, logger }: HttpContextContract) {
-    const body = request.body()
-    const params = request.params()
+    const { new_email: newEmail } = request.body()
+    const { id } = params
     try {
-      return await Auth0Service.updateUserEmail(params['id'], body['new_email'])
+      return await Auth0Service.updateUserEmail(id, newEmail)
     } catch (err) {
       logger.error(err)
       throw new Exception('Unable to update user email', 500, 'E_A0_SVC')
@@ -88,9 +88,9 @@ export default class Auth0Controller {
   }
 
   public async getRole({ request, logger }: HttpContextContract) {
-    const params = request.params()
+    const { id } = request.params()
     try {
-      return await Auth0Service.getRole(params['id'])
+      return await Auth0Service.getRole(id)
     } catch (err) {
       logger.error(err)
       throw new Exception('Unable to retrieve role', 500, 'E_A0_SVC')
@@ -98,12 +98,18 @@ export default class Auth0Controller {
   }
 
   public async getRoleUsers({ request, logger }: HttpContextContract) {
-    const params = request.params()
+    const { id } = request.params()
     try {
-      return await Auth0Service.getRole(params['id'])
+      return await Auth0Service.getRoleUsers(id)
     } catch (err) {
       logger.error(err)
       throw new Exception('Unable to retrieve users in role', 500, 'E_A0_SVC')
     }
+  }
+
+  public async clearCaches({ response }: HttpContextContract) {
+    await Auth0Service.clearUserCache()
+    await Auth0Service.clearRoleCache()
+    return response.ok(true)
   }
 }
