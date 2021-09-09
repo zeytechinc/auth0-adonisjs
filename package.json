@@ -1,5 +1,5 @@
 {
-  "name": "@zeytech/adonis-auth0",
+  "name": "@zeytech/auth0-adonisjs",
   "version": "1.1.0",
   "description": "Zeytech AdonisJS plugin to help integrate Auth0 for authentication",
   "main": "build/providers/Auth0Provider.js",
@@ -77,7 +77,7 @@
     "anyBranch": false
   },
   "dependencies": {
-    "@zeytech/cache-adonisjs": "^1.0.14",
+    "@zeytech/cache-adonisjs": "^1.0.15",
     "auth0": "^2.36.1",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.0.4"
@@ -85,9 +85,9 @@
   "adonisjs": {
     "instructionsMd": "./build/instructions.md",
     "instructions": "./build/instructions.js",
-    "types": "@zeytech/adonis-auth0",
+    "types": "@zeytech/auth0-adonisjs",
     "providers": [
-      "@zeytech/adonis-auth0"
+      "@zeytech/auth0-adonisjs"
     ],
     "templates": {
       "basePath": "./build/templates",
