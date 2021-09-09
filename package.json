@@ -1,6 +1,6 @@
 {
   "name": "@zeytech/auth0-adonisjs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Zeytech AdonisJS plugin to help integrate Auth0 for authentication",
   "main": "build/providers/Auth0Provider.js",
   "repository": {
