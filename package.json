@@ -27,7 +27,8 @@
   },
   "author": "Zeytech Inc (https://zeytech.com)",
   "contributors": [
-    "Steve Krenek (https://github.com/skrenek)"
+    "Steve Krenek (https://github.com/skrenek)",
+    "Tom Rismeyer (https://github.com/TinyTom99)"
   ],
   "license": "MIT",
   "devDependencies": {
