@@ -21,9 +21,8 @@
     "commit": "git-cz",
     "release": "np",
     "version": "npm run build",
-    "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json zeytechinc/zeytech-adonis-auth0",
-    "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build",
-    "co:login": "aws codeartifact login --tool npm --repository zeytech-internal --domain zeytech --domain-owner 353361721131 --profile zeytech-dev --region us-east-1 --namespace @zeytech"
+    "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json zeytechinc/auth0-adonisjs",
+    "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build"
   },
   "author": "Zeytech Inc (https://zeytech.com)",
   "contributors": [
