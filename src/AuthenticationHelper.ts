@@ -1,3 +1,13 @@
+/*
+ * File: AuthenticationHelper.ts
+ * Created Date: Aug 26, 2021
+ * Copyright (c) 2021 Zeytech Inc. (https://zeytech.com)
+ * Author: Steve Krenek (https://github.com/skrenek)
+ * -----
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ConfigContract } from '@ioc:Adonis/Core/Config'
 import { RequestContract } from '@ioc:Adonis/Core/Request'
@@ -48,8 +58,10 @@ export class AuthenticationHelper implements AuthenticationHelperContract {
                 rememberMeToken: bearerToken,
               }
             )
-            // @ts-ignore
-            await ctx.auth.use('web').login(Object.assign({ id: user.id }, auth0User))
+            if (ctx.auth) {
+              // @ts-ignore - this is fine at runtime.
+              await ctx.auth.use(authConfig.guard).login(Object.assign({ id: user.id }, auth0User))
+            }
           } else {
             console.log('no user model in app or id on token')
           }

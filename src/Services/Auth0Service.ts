@@ -1,3 +1,13 @@
+/*
+ * File: Auth0Service.ts
+ * Created Date: Aug 26, 2021
+ * Copyright (c) 2021 Zeytech Inc. (https://zeytech.com)
+ * Author: Steve Krenek (https://github.com/skrenek)
+ * -----
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 import { AppMetadata, ManagementClient, Role, UpdateUserData, User, UserMetadata } from 'auth0'
 import { ConfigContract } from '@ioc:Adonis/Core/Config'
 import { LoggerContract } from '@ioc:Adonis/Core/Logger'
@@ -5,8 +15,8 @@ import { promisify } from 'util'
 import * as jwt from 'jsonwebtoken'
 import { Auth0ClientConfig, Auth0ServiceContract } from '@ioc:Adonis/Addons/Zeytech/Auth0Service'
 import { Exception } from '@adonisjs/core/build/standalone'
-import { TLRUCacheContract } from '@ioc:Skrenek/Adonis/Cache/TLRUCache'
-import { CacheManagerContract } from '@ioc:Skrenek/Adonis/Cache'
+import { TLRUCacheContract } from '@ioc:Adonis/Addons/Zeytech/Cache/TLRUCache'
+import { CacheManagerContract } from '@ioc:Adonis/Addons/Zeytech/Cache'
 import jwksClientConstructor from 'jwks-rsa'
 
 const jwtVerify = promisify<
@@ -34,7 +44,7 @@ export default class Auth0Service implements Auth0ServiceContract {
     this.cacheManager.createTLRUCache(
       userCacheKey,
       cacheConfig.users.maxSize,
-      cacheConfig.users.maxAge, // config is in sec.  cache accepts ms
+      cacheConfig.users.maxAge * 1000, // config is in sec.  cache accepts ms
       cacheConfig.users.engine,
       'User Cache',
       cacheConfig.users.connectionName
@@ -42,7 +52,7 @@ export default class Auth0Service implements Auth0ServiceContract {
     this.cacheManager.createTLRUCache(
       roleCacheKey,
       cacheConfig.roles.maxSize,
-      cacheConfig.roles.maxAge, // config is in sec.  cache accepts ms
+      cacheConfig.roles.maxAge * 1000, // config is in sec.  cache accepts ms
       cacheConfig.roles.engine,
       'Role Cache',
       cacheConfig.roles.connectionName

@@ -3,6 +3,9 @@
   "version": "1.1.0",
   "description": "Zeytech AdonisJS plugin to help integrate Auth0 for authentication",
   "main": "build/providers/Auth0Provider.js",
+  "repository": {
+    "url": "git://github.com/zeytechinc/auth0-adonisjs.git"
+  },
   "types": "build/adonis-typings/index.d.ts",
   "typings": "build/adonis-typings/index.d.ts",
   "scripts": {
@@ -20,16 +23,20 @@
     "version": "npm run build",
     "sync-labels": "github-label-sync --labels ./node_modules/@adonisjs/mrm-preset/gh-labels.json zeytechinc/zeytech-adonis-auth0",
     "copyfiles": "copyfiles \"templates/**/*.txt\" \"instructions.md\" build",
-    "co:login": "aws codeartifact login --tool npm --repository zeytech-internal --domain zeytech --domain-owner 353361721131 --profile zeytech-dev --region us-east-1 --namespace @zeytech",
-    "prepare": "npm run co:login"
+    "co:login": "aws codeartifact login --tool npm --repository zeytech-internal --domain zeytech --domain-owner 353361721131 --profile zeytech-dev --region us-east-1 --namespace @zeytech"
   },
-  "author": "Zeytech Inc.",
-  "license": "Unlicense",
+  "author": "Zeytech Inc (https://zeytech.com)",
+  "contributors": [
+    "Steve Krenek (https://github.com/skrenek)"
+  ],
+  "license": "MIT",
   "devDependencies": {
+    "@adonisjs/auth": "^8.0.9",
     "@adonisjs/core": "^5.1.11",
     "@adonisjs/http-server": "^5.5.5",
     "@adonisjs/mrm-preset": "^4.1.2",
     "@adonisjs/require-ts": "^2.0.7",
+    "@adonisjs/sink": "^5.1.6",
     "@types/auth0": "^2.33.4",
     "@types/jsonwebtoken": "^8.5.5",
     "@types/node": "^16.6.2",
@@ -57,6 +64,7 @@
     "build/adonis-typings",
     "build/templates",
     "build/instructions.md",
+    "build/instructions.js",
     "build/templates"
   ],
   "config": {
@@ -69,16 +77,17 @@
     "anyBranch": false
   },
   "dependencies": {
-    "@skrenek/cache-adonisjs": "^1.0.0",
+    "@zeytech/cache-adonisjs": "^1.0.14",
     "auth0": "^2.36.1",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.0.4"
   },
   "adonisjs": {
     "instructionsMd": "./build/instructions.md",
+    "instructions": "./build/instructions.js",
     "types": "@zeytech/adonis-auth0",
     "providers": [
-      "zeytech-adonis-auth0"
+      "@zeytech/adonis-auth0"
     ],
     "templates": {
       "basePath": "./build/templates",
@@ -86,12 +95,6 @@
         {
           "src": "config.txt",
           "dest": "zeytech-auth0"
-        }
-      ],
-      "app": [
-        {
-          "src": "Auth0Controller.txt",
-          "dest": "Controllers/Http/Auth0Controller"
         }
       ]
     }

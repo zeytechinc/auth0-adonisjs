@@ -1,3 +1,13 @@
+/*
+ * File: auth0.ts
+ * Created Date: Aug 26, 2021
+ * Copyright (c) 2021 Zeytech Inc. (https://zeytech.com)
+ * Author: Steve Krenek (https://github.com/skrenek)
+ * -----
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
   import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
   import { RequestContract } from '@ioc:Adonis/Core/Request'
@@ -60,18 +70,6 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
     jwtCert?: string
     tokenRolesKey?: string
     cache: Auth0CacheConfig
-
-    /* engine: 'memory', // Valid values: 'memory' | 'redis'
-    users: {
-      maxSize: 50,
-      maxAage: 900, // in seconds
-      connectionName: 'cache', // Used only if engine is 'redis'
-    },
-    roles: {
-      maxSize: 0,
-      maxAge: 3600, // in seconds
-      connectionName: 'cache', // Used only if engine is 'redis'
-    }, */
   }
 
   export interface Auth0ServiceContract {

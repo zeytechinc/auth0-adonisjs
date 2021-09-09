@@ -1,10 +1,14 @@
 /*
- * @zeytech/adonis-auth0
- *
- * (c) Zeytech Inc.
+ * File: Auth0Provider.ts
+ * Created Date: Aug 26, 2021
+ * Copyright (c) 2021 Zeytech Inc. (https://zeytech.com)
+ * Author: Steve Krenek (https://github.com/skrenek)
+ * -----
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 import { ApplicationContract } from '@ioc:Adonis/Core/Application'
-import { CacheManagerContract } from '@ioc:Skrenek/Adonis/Cache'
+import { CacheManagerContract } from '@ioc:Adonis/Addons/Zeytech/Cache'
 import { AuthenticationHelper } from '../src/AuthenticationHelper'
 import { AuthenticateMiddleware } from '../src/Middleware/Authenticate'
 import Auth0Service from '../src/Services/Auth0Service'

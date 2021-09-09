@@ -11,7 +11,8 @@
     },
     "types": [
       "@adonisjs/core",
-      "@skrenek/cache-adonisjs"
+      "@adonisjs/auth",
+      "@zeytech/cache-adonisjs"
     ],
   },
 }
