@@ -6,6 +6,7 @@
   "repository": {
     "url": "git://github.com/zeytechinc/auth0-adonisjs.git"
   },
+  "keywords": ["adonisjs", "auth0", "auth"],
   "types": "build/adonis-typings/index.d.ts",
   "typings": "build/adonis-typings/index.d.ts",
   "scripts": {

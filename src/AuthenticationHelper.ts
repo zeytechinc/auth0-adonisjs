@@ -11,7 +11,10 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { ConfigContract } from '@ioc:Adonis/Core/Config'
 import { RequestContract } from '@ioc:Adonis/Core/Request'
-import { AuthenticationHelperContract } from '@ioc:Adonis/Addons/Zeytech/Auth0Service'
+import {
+  Auth0AdonisConfig,
+  AuthenticationHelperContract,
+} from '@ioc:Adonis/Addons/Zeytech/Auth0Service'
 import Auth0Service from './Services/Auth0Service'
 import { Exception } from '@adonisjs/core/build/standalone'
 
@@ -45,25 +48,34 @@ export class AuthenticationHelper implements AuthenticationHelperContract {
 
         if (this.config.get('auth') && decodedToken.sub) {
           const authConfig = this.config.get('auth')
-          const UserModel = (await authConfig.guards[authConfig.guard].provider.model()).default
+          const zeytechAuthConfig = this.config.get('zeytech-auth0') as Auth0AdonisConfig
           const auth0User = await this.authService.getUser(decodedToken.sub)
           ctx.request.email = auth0User.email
-          if (UserModel) {
-            const user = await UserModel.firstOrCreate(
-              {
-                email: auth0User.email || undefined,
-              },
-              {
-                password: '',
-                rememberMeToken: bearerToken,
+
+          if (zeytechAuthConfig.localUsers) {
+            const UserModel = (await authConfig.guards[authConfig.guard].provider.model()).default
+
+            if (UserModel) {
+              const lookupKey = zeytechAuthConfig.localUsers.lookupKey || 'email'
+              if (zeytechAuthConfig.localUsers.createWhenMissing) {
+                const searchOpts = {}
+                switch (lookupKey) {
+                  case 'email':
+                    searchOpts['email'] = auth0User.email
+                    break
+                  case 'id':
+                    searchOpts['id'] = decodedToken.sub
+                }
+
+                await UserModel.firstOrCreate(searchOpts, {})
               }
-            )
-            if (ctx.auth) {
-              // @ts-ignore - this is fine at runtime.
-              await ctx.auth.use(authConfig.guard).login(Object.assign({ id: user.id }, auth0User))
+            } else {
+              console.log('no user model in app or id on token')
             }
-          } else {
-            console.log('no user model in app or id on token')
+          }
+          if (ctx.auth) {
+            // @ts-ignore - this is fine at runtime.  TS hates it because GuardsList has no structure
+            await ctx.auth.use(authConfig.guard).login(auth0User)
           }
         }
 

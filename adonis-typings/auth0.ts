@@ -69,6 +69,13 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
     auth0Config: Auth0ClientConfig
     jwtCert?: string
     tokenRolesKey?: string
+    localUsers?:
+      | {
+          createWhenMissing: boolean
+          lookupKey: string
+        }
+      | false
+    userLookupKey?: string
     cache: Auth0CacheConfig
   }
 
