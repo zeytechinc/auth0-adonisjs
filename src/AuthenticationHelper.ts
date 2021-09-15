@@ -79,7 +79,7 @@ export class AuthenticationHelper implements AuthenticationHelperContract {
           }
           if (ctx.auth) {
             // @ts-ignore - this is fine at runtime.  TS hates it because GuardsList has no structure
-            await ctx.auth.use(authConfig.guard).login(Object.assign({ id: userId }, auth0User)
+            await ctx.auth.use(authConfig.guard).login(Object.assign({ id: userId }, auth0User))
           }
         }
 
