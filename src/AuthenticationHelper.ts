@@ -51,6 +51,7 @@ export class AuthenticationHelper implements AuthenticationHelperContract {
           const zeytechAuthConfig = this.config.get('zeytech-auth0') as Auth0AdonisConfig
           const auth0User = await this.authService.getUser(decodedToken.sub)
           ctx.request.email = auth0User.email
+          let userId = decodedToken.sub
 
           if (zeytechAuthConfig.localUsers) {
             const UserModel = (await authConfig.guards[authConfig.guard].provider.model()).default
@@ -67,7 +68,10 @@ export class AuthenticationHelper implements AuthenticationHelperContract {
                     searchOpts['id'] = decodedToken.sub
                 }
 
-                await UserModel.firstOrCreate(searchOpts, {})
+                const user = await UserModel.firstOrCreate(searchOpts, {})
+                if (user) {
+                  userId = user.id
+                }
               }
             } else {
               console.log('no user model in app or id on token')
@@ -75,7 +79,7 @@ export class AuthenticationHelper implements AuthenticationHelperContract {
           }
           if (ctx.auth) {
             // @ts-ignore - this is fine at runtime.  TS hates it because GuardsList has no structure
-            await ctx.auth.use(authConfig.guard).login(auth0User)
+            await ctx.auth.use(authConfig.guard).login(Object.assign({ id: userId }, auth0User)
           }
         }
 
