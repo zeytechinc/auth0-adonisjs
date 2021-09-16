@@ -8,7 +8,15 @@
  * file that was distributed with this source code.
  */
 
-import { AppMetadata, ManagementClient, Role, UpdateUserData, User, UserMetadata } from 'auth0'
+import {
+  AppMetadata,
+  CreateUserData,
+  ManagementClient,
+  Role,
+  UpdateUserData,
+  User,
+  UserMetadata,
+} from 'auth0'
 import { ConfigContract } from '@ioc:Adonis/Core/Config'
 import { LoggerContract } from '@ioc:Adonis/Core/Logger'
 import { promisify } from 'util'
@@ -122,6 +130,10 @@ export default class Auth0Service implements Auth0ServiceContract {
     return freshUser
   }
 
+  public async createUser(data: CreateUserData): Promise<User> {
+    return await this.mgmtClient.createUser(data)
+  }
+
   public async updateUser(auth0UserId: string, userData: Partial<UpdateUserData>): Promise<User> {
     return await this.mgmtClient.updateUser({ id: auth0UserId }, userData)
   }
@@ -178,5 +190,9 @@ export default class Auth0Service implements Auth0ServiceContract {
 
   public async clearRoleCache() {
     return this.roleCache.clear()
+  }
+
+  public get rawManagementClient(): ManagementClient {
+    return this.mgmtClient
   }
 }
