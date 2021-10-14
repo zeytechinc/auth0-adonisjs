@@ -16,6 +16,10 @@ A short brief
 
 ## Installation
 
+`npm i @zeytech/auth0-adonisjs`
+
+`node ace configure @zeytech/auth0-adonisjs`
+
 ## Usage
 
 [npm-image]: https://img.shields.io/npm/v/@zeytech/auth0-adonisjs.svg?style=for-the-badge&logo=npm

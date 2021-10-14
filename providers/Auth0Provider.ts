@@ -18,16 +18,14 @@ export default class Auth0Provider {
 
   public static needsApplication = true
 
-  public register() {}
-
-  public async boot() {
+  public register() {
     const config = this.app.container.resolveBinding('Adonis/Core/Config')
     this.app.container.singleton('Adonis/Addons/Zeytech/Auth0Service', () => {
       const cacheManager: CacheManagerContract = this.app.container.resolveBinding(
         'Adonis/Addons/Zeytech/Cache/CacheManager'
       )
       const logger = this.app.container.resolveBinding('Adonis/Core/Logger')
-      return new Auth0Service(config, logger, cacheManager)
+      return new Auth0Service(config, logger, cacheManager, this.app)
     })
 
     this.app.container.singleton('Adonis/Addons/Zeytech/AuthenticateMiddleware', () => {
@@ -35,7 +33,10 @@ export default class Auth0Provider {
       const authHelper = new AuthenticationHelper(config, authService)
       return new AuthenticateMiddleware(authHelper)
     })
+  }
 
+  public async boot() {
+    const config = this.app.container.resolveBinding('Adonis/Core/Config')
     const HealthCheck = this.app.container.use('Adonis/Core/HealthCheck')
     const authService = this.app.container.resolveBinding(
       'Adonis/Addons/Zeytech/Auth0Service'

@@ -39,6 +39,7 @@
     "@adonisjs/auth": "^8.0.9",
     "@adonisjs/core": "^5.1.11",
     "@adonisjs/http-server": "^5.5.5",
+    "@adonisjs/lucid": "^16.2.1",
     "@adonisjs/mrm-preset": "^4.1.2",
     "@adonisjs/require-ts": "^2.0.7",
     "@adonisjs/sink": "^5.1.6",
@@ -95,13 +96,7 @@
       "@zeytech/auth0-adonisjs"
     ],
     "templates": {
-      "basePath": "./build/templates",
-      "config": [
-        {
-          "src": "config.txt",
-          "dest": "zeytech-auth0"
-        }
-      ]
+      "basePath": "./build/templates"
     }
   }
 }
