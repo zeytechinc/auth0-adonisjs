@@ -57,7 +57,7 @@ export default class Auth0Controller {
 
   public async removeUserRole({ request, logger }: HttpContextContract) {
     const { role_id: roleId } = request.body()
-    const { id } = params
+    const { id } = request.params()
     try {
       return await Auth0Service.removeUserRole(roleId, id)
     } catch (err) {
@@ -68,7 +68,7 @@ export default class Auth0Controller {
 
   public async updateUserEmail({ request, logger }: HttpContextContract) {
     const { new_email: newEmail } = request.body()
-    const { id } = params
+    const { id } = request.params()
     try {
       return await Auth0Service.updateUserEmail(id, newEmail)
     } catch (err) {

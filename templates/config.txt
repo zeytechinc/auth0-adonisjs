@@ -14,6 +14,11 @@ const config: Auth0AdonisConfig = {
     scope: Env.get('AUTH0_SCOPE', ''),
   },
 
+  /**
+    * Determines if auth0 or manual roles should be used
+    */
+  localRoles: {{localRoles}},
+
   /* ---------------------
    * JWT cert for verifying auth0 tokens
    * ---------------------

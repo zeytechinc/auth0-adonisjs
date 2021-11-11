@@ -13,6 +13,7 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
   import { RequestContract } from '@ioc:Adonis/Core/Request'
   import { Role, User, UpdateUserData, CreateUserData, ManagementClient } from 'auth0'
   import { JwtPayload } from 'jsonwebtoken'
+  import { LucidRow } from '@ioc:Adonis/Lucid/Orm'
 
   export interface AuthenticationHelperContract {
     verifyAuthToken(
@@ -69,6 +70,7 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
     auth0Config: Auth0ClientConfig
     jwtCert?: string
     tokenRolesKey?: string
+    localRoles?: boolean
     localUsers?:
       | {
           createWhenMissing: boolean
@@ -85,13 +87,13 @@ declare module '@ioc:Adonis/Addons/Zeytech/Auth0Service' {
     getUser(id: string): Promise<User>
     createUser(userData: CreateUserData): Promise<User>
     updateUser(auth0UserId: string, userData: Partial<UpdateUserData>): Promise<User>
-    getAllUserRoles(auth0UserId: string): Promise<Role[]>
-    addUserRole(auth0RoleId: string, auth0UserId: string): Promise<Boolean>
-    removeUserRole(auth0RoleId: string, auth0UserId: string): Promise<Boolean>
+    getAllUserRoles(auth0UserId: string): Promise<Role[] | LucidRow[]>
+    addUserRole(roleId: string, auth0UserId: string): Promise<Boolean>
+    removeUserRole(roleId: string, auth0UserId: string): Promise<Boolean>
     updateUserEmail(auth0UserId: string, newEmail: string): Promise<User>
-    getAllRoles(): Promise<Role[]>
-    getRole(auth0RoleId: string): Promise<Role>
-    getRoleUsers(auth0RoleId: string): Promise<User[]>
+    getAllRoles(): Promise<Role[] | LucidRow[]>
+    getRole(roleId: string | number): Promise<Role | LucidRow | null>
+    getRoleUsers(roleId: string | number): Promise<User[] | LucidRow[]>
     clearUserCache(): Promise<void>
     clearRoleCache(): Promise<void>
     rawManagementClient: ManagementClient

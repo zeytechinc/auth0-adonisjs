@@ -26,6 +26,8 @@ import { Exception } from '@adonisjs/core/build/standalone'
 import { TLRUCacheContract } from '@ioc:Adonis/Addons/Zeytech/Cache/TLRUCache'
 import { CacheManagerContract } from '@ioc:Adonis/Addons/Zeytech/Cache'
 import jwksClientConstructor from 'jwks-rsa'
+import { ApplicationContract } from '@ioc:Adonis/Core/Application'
+import { BaseModel, LucidRow } from '@ioc:Adonis/Lucid/Orm'
 
 const jwtVerify = promisify<
   string,
@@ -41,11 +43,29 @@ export default class Auth0Service implements Auth0ServiceContract {
   private mgmtClient: ManagementClient
   private cert: string | jwt.GetPublicKeyOrSecret
 
+  private _applicationRole: typeof BaseModel
+  private get applicationRole() {
+    this._applicationRole =
+      this._applicationRole || this.app.container.use('App/Models/ApplicationRole').default
+    return this._applicationRole
+  }
+
+  private _userApplicationRole: typeof BaseModel
+  private get userApplicationRole() {
+    this._userApplicationRole =
+      this._userApplicationRole || this.app.container.use('App/Models/UserApplicationRole').default
+    return this._userApplicationRole
+  }
+
+  private auth0Roles = false
+
   constructor(
     private config: ConfigContract,
     private logger: LoggerContract,
-    private cacheManager: CacheManagerContract
+    private cacheManager: CacheManagerContract,
+    private app: ApplicationContract
   ) {
+    this.auth0Roles = !config.get('zeytech-auth0.localRoles')
     const clientConfig = config.get('zeytech-auth0.auth0Config')
     this.mgmtClient = new ManagementClient(clientConfig)
     const cacheConfig = config.get('zeytech-auth0.cache')
@@ -138,18 +158,43 @@ export default class Auth0Service implements Auth0ServiceContract {
     return await this.mgmtClient.updateUser({ id: auth0UserId }, userData)
   }
 
-  public async getAllUserRoles(auth0UserId: string): Promise<Role[]> {
-    return await this.mgmtClient.getUserRoles({ id: auth0UserId })
+  public async getAllUserRoles(auth0UserId: string): Promise<Role[] | LucidRow[]> {
+    if (this.auth0Roles) {
+      return await this.mgmtClient.getUserRoles({ id: auth0UserId })
+    } else {
+      return await this.applicationRole
+        .query()
+        .whereHas('userApplicationRoles' as any, (userApplicationRolesQuery) => {
+          userApplicationRolesQuery.where('user_id', '=', auth0UserId)
+        })
+    }
   }
 
-  public async addUserRole(auth0RoleId: string, auth0UserId: string): Promise<Boolean> {
-    await this.mgmtClient.assignRolestoUser({ id: auth0UserId }, { roles: [auth0RoleId] })
-    return true
+  public async addUserRole(roleId: string | number, auth0UserId: string): Promise<Boolean> {
+    if (this.auth0Roles) {
+      await this.mgmtClient.assignRolestoUser({ id: auth0UserId }, { roles: [roleId as string] })
+      return true
+    } else {
+      await this.userApplicationRole.create({
+        userId: auth0UserId,
+        applicationRoleId: roleId as number,
+      })
+      return true
+    }
   }
 
-  public async removeUserRole(auth0RoleId: string, auth0UserId: string): Promise<Boolean> {
-    await this.mgmtClient.removeRolesFromUser({ id: auth0UserId }, { roles: [auth0RoleId] })
-    return true
+  public async removeUserRole(roleId: string | number, auth0UserId: string): Promise<Boolean> {
+    if (this.auth0Roles) {
+      await this.mgmtClient.removeRolesFromUser({ id: auth0UserId }, { roles: [roleId as string] })
+      return true
+    } else {
+      await this.userApplicationRole
+        .query()
+        .where('user_id', '=', auth0UserId)
+        .where('application_role_id', '=', roleId)
+        .delete()
+      return true
+    }
   }
 
   public async updateUserEmail(auth0UserId: string, newEmail: string): Promise<User> {
@@ -157,23 +202,37 @@ export default class Auth0Service implements Auth0ServiceContract {
   }
 
   // Roles
-  public async getAllRoles(): Promise<Role[]> {
-    return await this.mgmtClient.getRoles()
-  }
-
-  public async getRole(auth0RoleId: string): Promise<Role> {
-    const cache = this.cacheManager.getTLRUCache<User<UserMetadata, AppMetadata>>(roleCacheKey)
-    const role = await cache?.get(auth0RoleId)
-    if (role) {
-      return role
+  public async getAllRoles(): Promise<Role[] | LucidRow[]> {
+    if (this.auth0Roles) {
+      return await this.mgmtClient.getRoles()
+    } else {
+      return await this.applicationRole.all()
     }
-    const freshRole = await this.mgmtClient.getRole({ id: auth0RoleId })
-    cache?.set(auth0RoleId, freshRole)
-    return freshRole
   }
 
-  public async getRoleUsers(auth0RoleId: string): Promise<User[]> {
-    return await this.mgmtClient.getUsersInRole({ id: auth0RoleId })
+  public async getRole(roleId: string | number): Promise<Role | LucidRow | null> {
+    if (this.auth0Roles) {
+      const cache = this.cacheManager.getTLRUCache<User<UserMetadata, AppMetadata>>(roleCacheKey)
+      const role = await cache?.get(roleId as string)
+      if (role) {
+        return role
+      }
+      const freshRole = await this.mgmtClient.getRole({ id: roleId as string })
+      cache?.set(roleId as string, freshRole)
+      return freshRole
+    } else {
+      return await this.applicationRole.find(roleId as number)
+    }
+  }
+
+  public async getRoleUsers(roleId: string | number): Promise<User[] | LucidRow[]> {
+    if (this.auth0Roles) {
+      return await this.mgmtClient.getUsersInRole({ id: roleId as string })
+    } else {
+      return await this.userApplicationRole
+        .query()
+        .where('application_role_id', '=', roleId as number)
+    }
   }
 
   public get userCache(): TLRUCacheContract<User<UserMetadata, AppMetadata>> {

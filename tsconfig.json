@@ -5,14 +5,8 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "paths": {
-      "App/*": [
-        "./app/*"
-      ],
+      "App/*": ["./app/*"]
     },
-    "types": [
-      "@adonisjs/core",
-      "@adonisjs/auth",
-      "@zeytech/cache-adonisjs"
-    ],
-  },
+    "types": ["@adonisjs/core", "@adonisjs/auth", "@adonisjs/lucid", "@zeytech/cache-adonisjs"]
+  }
 }
